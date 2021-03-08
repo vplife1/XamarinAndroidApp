@@ -69,9 +69,7 @@ namespace XamarinAndroidApp
            
 
             var lab = await dataBase.Table<LabTestData>().ToListAsync();                    //Get The Data From Database
-
-            //var data = responseData.Results.LabTestData;
-             
+           
                 var ll = new List<string>();
                
                 if (lab != null )
@@ -82,8 +80,5 @@ namespace XamarinAndroidApp
 
         }
 
-       
-
-       
     }
 }

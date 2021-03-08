@@ -24,7 +24,7 @@ namespace XamarinAndroidApp
         public LoginPage()
         {
             InitializeComponent();
-            LoadData();
+            //LoadData();
 
         }
 
@@ -44,13 +44,10 @@ namespace XamarinAndroidApp
 
         public async void LoadData()
         {
-           
-
-
             var data = new
             {
-                phleboMobileNumber = "9130361749",
-                mpinCode = "1111"
+                phleboMobileNumber = number.Text,
+                mpinCode =pin.Text
             };
      
             var RestURL = "https://tcdevapi.iworktech.net/v1api/Phlebotomists/phlebotomistLogin";
@@ -63,40 +60,27 @@ namespace XamarinAndroidApp
             client.DefaultRequestHeaders.Add("usertoken", "51QA3gF4ZjnDsUL4q8g84t1QcTTlhCGiEdqBcbrIDULqSKHDjOVBY98XsOqXWbWKKQjHoedkt38tsUj9MylnsA5GXtcQQOopimk5IcihfGGessmP6lMs6unVvE30kPWWxMKf0M0zJZEPzUgKGokz9Q==");
             HttpResponseMessage response = await client.PostAsync(RestURL, content1);            
            var  result = await response.Content.ReadAsStringAsync();
-               var responseData = JsonConvert.DeserializeObject<Response>(result);
-        
+               Response responseData = JsonConvert.DeserializeObject<Response>(result);
 
-            var ll = new List<string>();
-             String Id=Convert.ToString(responseData.Results.Id);
-            if(responseData!=null && responseData.Results != null)
+            if (responseData.Status == true)
             {
-
-                ll.Add(Id);
-                ll.Add(responseData.Results.FullName);
-                ll.Add(responseData.Results.FirstName);
-                ll.Add(responseData.Results.LastName);
-                ll.Add(responseData.Results.RoleName);
-                ll.Add(responseData.Results.PhleboContactNumber);
-                ll.Add(responseData.Results.Centers);
-                ll.Add(responseData.Results.PhleboCenter);
-           
+                //var user = UserInput.Text;
+                // user is just a string
+                //await dataBase.InsertAsync(responseData.Results);
+                var lab = await dataBase.Table<Results>().ToListAsync();
+                ListView1.ItemsSource = lab;
             }
-
-           // var aa = await dataBase.InsertAllAsync(ll);
-
-            
-            if (ll != null) {
-                ListView1.ItemsSource = ll;
+            else
+            {
+                DisplayAlert("Result", responseData.Message, "OK");
             }
-
-            var lab = await dataBase.Table<Results>().ToListAsync();
 
         }
 
-
-
-
-        
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            LoadData();
+        }
     }
 
 
