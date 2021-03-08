@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,10 +8,13 @@ namespace XamarinAndroidApp.Model
 {
    public class Results
     {
-        [JsonProperty(PropertyName = "Id")]
+          [PrimaryKey]
         public int Id { get; set; }
         [JsonProperty(PropertyName = "Email")]
         public string Email { get; set; }
+
+        [JsonProperty(PropertyName = "UserToken")]
+        public string UserToken { get; set; }
         [JsonProperty(PropertyName = "RememberMe")]
         public bool RememberMe { get; set; }
         [JsonProperty(PropertyName = "Centers")]

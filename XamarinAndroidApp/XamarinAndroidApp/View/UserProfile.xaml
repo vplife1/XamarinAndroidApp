@@ -5,7 +5,7 @@
     <ContentPage.Content>
         <StackLayout>
           
-            <ListView  x:Name="LabTestData" HasUnevenRows="True" IsPullToRefreshEnabled="True" IsRefreshing="{Binding Refreshing}" RefreshCommand="{Binding RefreshData}"  RowHeight="50">
+            <ListView  x:Name="LabTestData" HasUnevenRows="True" IsPullToRefreshEnabled="True"   RowHeight="50">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -18,14 +20,25 @@ namespace XamarinAndroidApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        private ObservableCollection<Results> _post;
+      
         public LoginPage()
         {
             InitializeComponent();
             LoadData();
 
         }
-       
+
+        SQLiteAsyncConnection dataBase;
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var databasePath = Path.Combine(basePath, "SQLite.db3");
+
+            dataBase = new SQLiteAsyncConnection(databasePath);
+            await dataBase.CreateTableAsync(typeof(Results));
+        }
 
 
 
@@ -39,11 +52,7 @@ namespace XamarinAndroidApp
                 phleboMobileNumber = "9130361749",
                 mpinCode = "1111"
             };
-            var content = "";
-
-            
-
-
+     
             var RestURL = "https://tcdevapi.iworktech.net/v1api/Phlebotomists/phlebotomistLogin";
             HttpClient client = new HttpClient();
             string jsonData = JsonConvert.SerializeObject(data);
@@ -70,231 +79,22 @@ namespace XamarinAndroidApp
                 ll.Add(responseData.Results.PhleboContactNumber);
                 ll.Add(responseData.Results.Centers);
                 ll.Add(responseData.Results.PhleboCenter);
-              
-               
-
+           
             }
-     
 
-        ListView1.ItemsSource = ll;
+           // var aa = await dataBase.InsertAllAsync(ll);
 
-             
+            
+            if (ll != null) {
+                ListView1.ItemsSource = ll;
+            }
+
+            var lab = await dataBase.Table<Results>().ToListAsync();
+
         }
 
 
 
-
-        public Command RefreshData
-        {
-            get
-            {
-                return new Command(()=>{
-
-                    LoadData(); 
-
-                });
-            }
-        }
-
-
-   
-       
-
-
-
-        string _Email;
-        public string Email
-        {
-            get
-            {
-                return _Email;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _Email = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        string _LastName;
-        public string LastName
-        {
-            get
-            {
-                return _LastName;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _LastName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        string _FirstName;
-        public string FirstName
-        {
-            get
-            {
-                return _FirstName;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _FirstName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-            bool _Refreshing;
-        public bool Refreshing
-        {
-            get
-            {
-                return _Refreshing;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _Refreshing = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-
-        int _ID;
-        public int Id
-        {
-            get
-            {
-                return _ID;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _ID = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-
-        bool _RememberMe;
-        public bool RememberMe
-        {
-            get
-            {
-                return _RememberMe;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _RememberMe = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        string _Centers;
-        public string Centers
-        {
-            get
-            {
-                return _Centers;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _Centers = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        string _RoleName;
-        public string RoleName
-        {
-            get
-            {
-                return _RoleName;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _RoleName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        string _FullName;
-        public string FullName
-        {
-            get
-            {
-                return _FullName;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _FullName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        string _PhleboCenter;
-        public string PhleboCenter
-        {
-            get
-            {
-                return _PhleboCenter;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _PhleboCenter = value;
-                    OnPropertyChanged();
-                }
-            }
-
-        }
-        string _PhleboContactNumber;
-        public string PhleboContactNumber
-        {
-            get
-            {
-                return _PhleboContactNumber;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _PhleboContactNumber = value;
-                    OnPropertyChanged();
-                }
-            }
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         
     }

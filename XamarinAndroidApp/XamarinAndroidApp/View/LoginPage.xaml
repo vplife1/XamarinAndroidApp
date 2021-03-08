@@ -4,10 +4,10 @@
              x:Class="XamarinAndroidApp.LoginPage">
     <ContentPage.Content>
         <StackLayout>
-            
-            
 
-            <ListView x:Name="ListView1" >
+
+
+            <ListView x:Name="ListView1"  HasUnevenRows="True">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
